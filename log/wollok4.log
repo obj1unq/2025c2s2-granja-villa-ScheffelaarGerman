@@ -251,3 +251,10 @@
 {"level":"info","message":"⌛ Validating cultivos.wlk","timeElapsed":204,"timestamp":"2025-10-11T21:31:52.688Z"}
 {"level":"info","message":"⌛ Validating cultivos.wlk","timeElapsed":108,"timestamp":"2025-10-11T21:31:52.894Z"}
 {"exitCode":"SIGHUP","level":"info","message":"👾 Game executed game.farmville on c:\\Repositorios\\POOI\\2025c2s2-granja-villa-ScheffelaarGerman","timeElapsed":427398,"timestamp":"2025-10-11T21:32:09.989Z"}
+{"level":"info","message":"🚀 Program executed \u001b[3m\u001b[34mgame.farmville\u001b[39m\u001b[23m on \u001b[3m\u001b[34mc:\\Repositorios\\POOI\\2025c2s2-granja-villa-ScheffelaarGerman\u001b[39m\u001b[23m","ok":true,"timeElapsed":478,"timestamp":"2025-10-11T21:32:12.689Z"}
+{"level":"error","message":"✘ Could not produce symbols: document file:///c%3A/Repositorios/POOI/2025c2s2-juegodepepitatutoriales-ScheffelaarGerman/pepitaGame.wpgm not found","timestamp":"2025-10-11T21:33:04.200Z"}
+{"level":"info","message":"⌛ Building environment","timeElapsed":237,"timestamp":"2025-10-11T21:33:11.349Z"}
+{"level":"info","message":"⌛ Validating personaje.wlk","timeElapsed":161,"timestamp":"2025-10-11T21:33:11.512Z"}
+{"level":"info","message":"⌛ Validating game.wpgm","timeElapsed":120,"timestamp":"2025-10-11T21:33:11.633Z"}
+{"level":"info","message":"⌛ Validating cultivos.wlk","timeElapsed":103,"timestamp":"2025-10-11T21:33:11.736Z"}
+{"exitCode":"SIGHUP","level":"info","message":"👾 Game executed game.farmville on c:\\Repositorios\\POOI\\2025c2s2-granja-villa-ScheffelaarGerman","timeElapsed":207502,"timestamp":"2025-10-11T21:35:39.706Z"}
