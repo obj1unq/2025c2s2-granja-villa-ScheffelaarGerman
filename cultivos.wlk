@@ -5,6 +5,7 @@ import personaje.*
 class Maiz {
 	var position
 	var esBebe = true
+	var estaListoParaCosechar = false
 	
 	method image(){
 		 if (esBebe){
@@ -19,15 +20,19 @@ class Maiz {
 	method position(nuevaPosicion) { position = nuevaPosicion}
 
 	method regar(){
-		if ( esBebe) { esBebe= false}
+		if ( esBebe) { 
+			esBebe= false
+		}
 	}
 
+	method estaListoParaCosechar() {return (!esBebe)}
 }
 
 
 class Trigo {
 	var position
 	var etapa = 0
+	var estaListoParaCosechar = false
 	
 	method image() {return "wheat_" + etapa + ".png"}
 
@@ -41,11 +46,12 @@ class Trigo {
 		} else {
 			etapa =0
 		}
-
 	}
+	method estaListoParaCosechar(){ return etapa ==3}
 }
 class Tomaco {
-	var position 
+	var position
+	var estaListoParaCosechar = true
 	
 	method position() {return position 	}
 
@@ -64,7 +70,8 @@ class Tomaco {
 			const nuevoTomaco = new Tomaco ( position = parcelaACrecer)
 			granja.agregarCultivo(nuevoTomaco)
 		}
-
 	}
+
+	method estaListoParaCosechar()  {return  estaListoParaCosechar}
 
 }

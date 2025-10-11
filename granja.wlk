@@ -4,6 +4,7 @@ import cultivos.*
 
 object granja {
     var cultivos = #{}
+    var cosecha = #{}
     
     method cultivosSembrados() = cultivos
     
@@ -16,9 +17,9 @@ object granja {
         game.addVisual(nuevoCultivo)
     }
     
-    method removerCultivo(cultivoASacar) {
-        cultivos.remove(cultivoASacar)
-        game.removeVisual(cultivoASacar)
+     method cosechar(cultivo) {
+            cosecha.add(cultivo)
+            cultivos.remove(cultivo)
+            game.removeVisual(cultivo)
     }
 }
-
