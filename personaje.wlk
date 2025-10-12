@@ -5,8 +5,9 @@ import granja.*
 object personaje {
     var property position = game.center()
     const property image = "mplayer.png"
-
-    method sembrarMaiz() {
+    var property monedasDeOro = 0
+    
+     method sembrarMaiz() {
         const maiz = new Maiz(position = self.position())
         self.sembrar(maiz)
     }
@@ -22,32 +23,82 @@ object personaje {
     }
 
     method sembrar(cultivo) {
-        if (!granja.hayCultivosEn(self.position())) {
-            granja.agregarCultivo(cultivo)
-        } else {
-            game.say(self,"Parcela Ocupada")
+        self.validarParcelaParaSiembra()
+        granja.agregarCultivo(cultivo)
+    }
+
+    method validarParcelaParaSiembra() {
+        if (self.estoyEnLugarDeVenta()) {
+            self.error("No es tierra fértil")
+        }
+        if (granja.hayCultivoEn(self.position())) {
+            self.error("Parcela ocupada")
         }
     }
 
     method regar() {
-        const cultivosARegar = granja.cultivosEn(self.position())
-        if (!granja.hayCultivosEn(self.position())) {
-            game.say(self,"Parcela Vacia")
+        if (!granja.hayCultivoEn(self.position())) {
+            self.error("Parcela vacía")
         }
-        cultivosARegar.forEach({ cultivo => cultivo.regar() })
+        const cultivo = granja.cultivoEn(self.position())
+        cultivo.regar()
     }
 
     method cosechar() {
-        const cultivosACosechar = granja.cultivosEn(self.position())
-        if (!granja.hayCultivosEn(self.position())) {
-            game.say(self,"Nada para Cosechar")
+        if (!granja.hayCultivoEn(self.position())) {
+            self.error("Nada para cosechar")
         }
-        cultivosACosechar.forEach({ cultivo =>
-            if (cultivo.estaListoParaCosechar()) {
-                granja.cosechar(cultivo)
-            }else{
-				game.say(self, "No se puede Cosechar aun.")
-			}
+
+        const cultivo = granja.cultivoEn(self.position())
+
+        if (cultivo.estaListoParaCosechar()) {
+            granja.cosechar(cultivo)
+        } else {
+            self.error("No se puede cosechar aún.")
+        }
+    }
+
+
+        method vender() {
+        self.validarLugarDeVenta()
+
+        if (!self.hayCultivosCosechados()) {
+            self.error("Nada para vender")
+        }
+
+        const cosechaAVender = granja.cultivosCosechados()
+        cosechaAVender.forEach({ cultivoCosechado =>
+            self.venderCultivo(cultivoCosechado)
         })
+    }
+
+    method validarLugarDeVenta() {
+        if (!self.estoyEnLugarDeVenta()) {
+            self.error("Nada que vender acá")
+        }
+    }
+
+    method estoyEnLugarDeVenta() {
+        return self.position() == market.position()
+    }
+
+    method hayCultivosCosechados() {
+        return !granja.cultivosCosechados().isEmpty()
+    }
+
+    method venderCultivo(unCultivo) {
+        unCultivo.vender()
+    }
+
+    method sumarMonedas(cantidad) {
+        monedasDeOro = monedasDeOro + cantidad
+    }
+
+    method inventario() {
+        const plantasCosechadas = granja.cultivosCosechados().size()
+        game.say(self, 
+            "Monedas de Oro: " + monedasDeOro +  "\n"  +
+            "Plantas cosechadas: " + plantasCosechadas
+        )
     }
 }

@@ -1,3 +1,4 @@
+import granja.*
 import wollok.game.*
 import personaje.*
 import cultivos.*
@@ -10,7 +11,9 @@ program farmville {
 	game.ground("ground.png")
 
 	//  VISUALES
- 	game.addVisualCharacter(personaje)
+ 	game.addVisual(market)
+	game.addVisualCharacter(personaje)
+	
  	
 	//COMANDOS
 	keyboard.m().onPressDo({personaje.sembrarMaiz()})
@@ -18,6 +21,8 @@ program farmville {
 	keyboard.o().onPressDo({personaje.sembrarTomaco()})
 	keyboard.r().onPressDo({personaje.regar()})
 	keyboard.c().onPressDo({personaje.cosechar()})
+	keyboard.v().onPressDo({personaje.vender()})
+	keyboard.space().onPressDo({personaje.inventario()})
  	
 	//  COMIENZA
 	game.start()
