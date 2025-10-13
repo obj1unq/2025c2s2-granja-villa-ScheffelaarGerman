@@ -1,6 +1,8 @@
 import wollok.game.*
 import granja.*
 import personaje.*
+import extras.*
+
 class Maiz {
     var position
     var esBebe = true
@@ -32,6 +34,10 @@ class Maiz {
         personaje.sumarMonedas(valorPorPlanta)
         granja.removerCosecha(self)
     }
+
+	method esRegable() { return true }
+
+
 }
 
 class Trigo {
@@ -68,28 +74,33 @@ class Trigo {
         personaje.sumarMonedas(valorPorPlanta)
         granja.removerCosecha(self)
     }
+
+	method esRegable() { return true }
+
+
 }
 class Tomaco {
     var position
 
+    method image() { return "tomaco.png"}
+
     method position() { return position }
+   
     method position(nuevaPosicion) { position = nuevaPosicion }
 
-    method image() { return "tomaco.png" }
-
-    method regar() {
-        const parcelaACrecer = 
+        method regar() {
+        const parcelaACrecer =
             if (position.y() == game.height() - 1) {
                 game.at(position.x(), 0)
             } else {
                 position.up(1)
             }
-
-        if (!granja.hayCultivoEn(parcelaACrecer)) {
+        if (granja.esParcelaDisponible(parcelaACrecer)) {
             const nuevoTomaco = new Tomaco(position = parcelaACrecer)
             granja.agregarCultivo(nuevoTomaco)
         }
     }
+
 
     method estaListoParaCosechar() {
         return true
@@ -100,4 +111,8 @@ class Tomaco {
         personaje.sumarMonedas(valorPorPlanta)
         granja.removerCosecha(self)
     }
+
+	method esRegable() { return true }
+
+
 }

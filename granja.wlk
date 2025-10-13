@@ -1,10 +1,13 @@
 import wollok.game.*
 import personaje.*
 import cultivos.*
+import extras.*
+
 
 object granja {
     var cultivos = #{}
     var cosecha = #{}
+    var aspersores = #{}
     
     method cultivosSembrados() = cultivos
    
@@ -29,10 +32,35 @@ object granja {
     method removerCosecha(unaPlanta) {
         cosecha.remove(unaPlanta)
     }
+    
+    method esTierraFertil(posicion) {
+        return posicion != market.position()
+    }
+
+    method esParcelaDisponible(posicion) {
+
+        return self.esTierraFertil(posicion) && !self.hayCultivoEn(posicion) && !self.hayAspersorEn(posicion)
+    }
+
+    method esRegable() { return false }
+
+    method hayAspersorEn(posicion){
+        return aspersores.any({aspersor => aspersor.position() == posicion})
+    }
+
+    method agregarAspersor(unAspersor){
+        aspersores.add(unAspersor)
+        game.addVisual(unAspersor)
+
+    }
 }
 
 
 object market {
     var property position = game.at(0, 0)
+    
     method image() { return "market.png" }
+
+    method esRegable() { return false }
+
 }

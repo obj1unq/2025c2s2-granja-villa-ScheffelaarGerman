@@ -2,6 +2,8 @@ import granja.*
 import wollok.game.*
 import personaje.*
 import cultivos.*
+import extras.*
+
 
 program farmville {
 	//  CONFIG	
@@ -23,6 +25,7 @@ program farmville {
 	keyboard.c().onPressDo({personaje.cosechar()})
 	keyboard.v().onPressDo({personaje.vender()})
 	keyboard.space().onPressDo({personaje.inventario()})
+	keyboard.a().onPressDo({personaje.colocarAspersor()})
  	
 	//  COMIENZA
 	game.start()

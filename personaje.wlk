@@ -1,6 +1,7 @@
 import wollok.game.*
 import cultivos.*
 import granja.*
+import extras.*
 
 object personaje {
     var property position = game.center()
@@ -28,13 +29,16 @@ object personaje {
     }
 
     method validarParcelaParaSiembra() {
-        if (self.estoyEnLugarDeVenta()) {
-            self.error("No es tierra fértil")
-        }
-        if (granja.hayCultivoEn(self.position())) {
-            self.error("Parcela ocupada")
-        }
+    if (!granja.esTierraFertil(self.position())) {
+        self.error("No es tierra fértil")
     }
+
+    if (granja.hayCultivoEn(self.position())) {
+        self.error("Parcela ocupada")
+    }
+}
+
+
 
     method regar() {
         if (!granja.hayCultivoEn(self.position())) {
@@ -57,6 +61,7 @@ object personaje {
             self.error("No se puede cosechar aún.")
         }
     }
+
 
 
         method vender() {
@@ -101,4 +106,22 @@ object personaje {
             "Plantas cosechadas: " + plantasCosechadas
         )
     }
+
+    method esRegable() { return false }
+
+    method colocarAspersor() {
+    const posActual = self.position()
+
+    if (granja.hayAspersorEn(self.position())) {
+        self.error("Ya hay un aspersor aca ")
+    } else if (granja.hayCultivoEn(posActual)) {
+        self.error("Parcela ocupada")
+    } else {
+        const nuevoAspersor = new Aspersor(position = self.position())
+        granja.agregarAspersor(nuevoAspersor)
+        nuevoAspersor.comenzarARegar()
+    }
+}
+
+    
 }
