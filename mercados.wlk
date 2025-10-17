@@ -53,14 +53,14 @@ object mercados{
 		 mercadosInstalados.add(nuevoMercado)
 	 }
 method hayMercadoEn(posicion) {
-    return mercadosInstalados.any({ mercado =>
+     return mercadosInstalados.any({ mercado =>
         mercado.position() == posicion
     })
 }
 
 
 method mercadoEn(posicion) {
-    return mercadosInstalados.find({ mercado =>
+     return mercadosInstalados.find({ mercado =>
         mercado.position() == posicion
     })
 }

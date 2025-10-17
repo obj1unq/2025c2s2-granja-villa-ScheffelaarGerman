@@ -31,7 +31,6 @@ object personaje {
          const tomaco = new Tomaco(position = self.position())
          self.sembrar(tomaco)
 }
-
 //**  Riego  **//
     method regar() {
          self.validarParcelaParaRiego()
@@ -60,16 +59,16 @@ object personaje {
          }
      }    
     method validarEstadoDeCultivoParaCosecha(){    
-      const cultivoACosechar = cultivos.cultivoEn(self.position())
-      if (!cultivoACosechar.estaListoParaCosechar()) {
-         self.error("No se puede cosechar aún")
-         }
+         const cultivoACosechar = cultivos.cultivoEn(self.position())
+             if (!cultivoACosechar.estaListoParaCosechar()) {
+                 self.error("No se puede cosechar aún")
+             }
      }
     method vaciarCosecha(){
-     cultivosCosechados.clear()
+         cultivosCosechados.clear()
     }
     method cultivosCosechados(){
-        return cultivosCosechados
+          return cultivosCosechados
     }
 //**  Venta  **//
     method vender() {
@@ -80,47 +79,47 @@ object personaje {
          mercadoActual.comprar(cosechaAVender, self)
     }
  method validarLugarDeVenta() {
-    const posicionActual = self.position()
-    if (mercados.hayMercadoEn(posicionActual)) {
-        if (!self.hayCultivosCosechados()) {
-            self.error("Nada para vender")
-        }
-    } else {
-        self.error("No es lugar de venta")
-    }
-}
+      const posicionActual = self.position()
+         if (mercados.hayMercadoEn(posicionActual)) {
+                 if (!self.hayCultivosCosechados()) {
+                     self.error("Nada para vender")
+                     }
+                } else {
+                         self.error("No es lugar de venta")
+         }
+     }
    method validarCosechaParaVenta() {
-      if (!self.hayCultivosCosechados()) {
-          self.error("Nada para vender")
-         } 
+         if (!self.hayCultivosCosechados()) {
+             self.error("Nada para vender")
+             } 
      }
     method hayCultivosCosechados() {
          return !cultivosCosechados.isEmpty()
     }
     method sumarMonedas(cantidad) {
-        monedas +=  cantidad
+         monedas +=  cantidad
     }
     method monedas(){
-        return monedas
+      return monedas
     }
 //**  Aspersor **//
     method colocarAspersor() {
-     self.validarParcelaParaAspersor()
-      aspersores.colocarAspersor(self.position())
-     }
+         self.validarParcelaParaAspersor()
+         aspersores.colocarAspersor(self.position())
+         }
     method validarParcelaParaAspersor() {
-    if (aspersores.hayAspersorEn(self.position())) {
-        self.error("Ya hay un aspersor aquí")
-    } else if (cultivos.hayCultivoEn(self.position())) {
-        self.error("Parcela ocupada")
-    } else if (mercados.hayMercadoEn(self.position())) {
-        self.error("No se puede colocar un aspersor en el mercado")
-    }
-}
+         if (aspersores.hayAspersorEn(self.position())) {
+             self.error("Ya hay un aspersor aquí")
+             } else if (cultivos.hayCultivoEn(self.position())) {
+                 self.error("Parcela ocupada")
+                 } else if (mercados.hayMercadoEn(self.position())) {
+                        self.error("No se puede colocar un aspersor en el mercado")
+         }
+     }
 //** Inventario  **//    
 method inventario() {
      const plantasCosechadas = cultivosCosechados.size()
      game.say(self, "Cultivos Cosechados:"+plantasCosechadas+"\nMonedas: "+ monedas)
-}
+     }
 }
 

@@ -4,17 +4,20 @@ import personaje.*
 import mercados.*
 
 class Aspersor {
-    var  property position
-    const image = "aspersor.png"
+        var  property position
+         const image = "aspersor.png"
    
-    method esRegable(){
-           return false
+     method esRegable(){
+        return false
     }
     method image(){
-       return image
+        return image
     }
-     method comenzarARegar(){
-           game.onTick(1000, "Riego Automatico",{ self.regarPosicionesLindantes()})
+    method position(){
+        return position
+       }
+    method comenzarARegar(){
+        game.onTick(1000, "Riego Automatico",{ self.regarPosicionesLindantes()})
     }
     method regarPosicionesLindantes() {
            const posicionesARegar = self.posicionesVecinas()
@@ -57,7 +60,10 @@ object aspersores{
 	}
 	method aspersorEn(posicion){
 		 return aspersoresColocados.find({aspersor => aspersor.position() == posicion})
-	}
+	 }
+       method aspersoresColocados(){
+              return aspersoresColocados
+       }
 }
 
 

@@ -4,7 +4,7 @@ import aspersores.*
 import mercados.*
 //** Cultivos **//
 object cultivos {
-    const cultivosSembrados = #{}
+     const cultivosSembrados = #{}
   
     method agregarCultivo(cultivo) {
          cultivosSembrados.add(cultivo)
@@ -30,13 +30,13 @@ object cultivos {
              )   
      }
     method cultivosSembrados(){
-        return cultivosSembrados
+         return cultivosSembrados
     }
 }
 //** Maiz **//
 class Maiz {
-    var property position
-    var etapa = maizBebe
+     var property position
+     var etapa = maizBebe
 
     method sembrarCultivo(posicion){
          position = posicion
@@ -60,22 +60,29 @@ class Maiz {
      method esRegable(){
          return true
      }
+     method etapa(){
+         return etapa 
+     }
 }
 object maizBebe {
-    method image() { return "corn_baby.png" }
+     method image(){
+         return "corn_baby.png" 
+     }
+    method siguienteEstado(){
+         return maizAdulto
+     }
+    method estaListoParaCosechar(){
+         return false
+     }
 
-    method siguienteEstado() { return maizAdulto }
-
-    method estaListoParaCosechar() { return false }
-
-    method valorDeVenta() { return 0 }
+    method valorDeVenta(){
+          return 0
+    }
 }
-
 object maizAdulto {
     method image(){
          return "corn_adult.png"
      }
-
     method siguienteEstado(){
          return self
      }
@@ -85,12 +92,11 @@ object maizAdulto {
     method valorDeVenta(){
          return 150
      }
-
 }
 //** Trigo **//
  class Trigo {
-    var property position
-    var etapa = trigoEtapa0
+     var property position
+     var etapa = trigoEtapa0
    
     method sembrarCultivo(posicion){
          position = posicion
