@@ -1,8 +1,9 @@
-import granja.*
 import wollok.game.*
-import personaje.*
 import cultivos.*
-import extras.*
+import personaje.*
+import aspersores.*
+import mercados.*
+
 
 
 program farmville {
@@ -13,7 +14,7 @@ program farmville {
 	game.ground("ground.png")
 
 	//  VISUALES
- 	game.addVisual(market)
+	mercados.colocarMercados()
 	game.addVisualCharacter(personaje)
 	
  	
