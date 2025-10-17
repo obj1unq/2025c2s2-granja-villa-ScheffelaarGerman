@@ -10,8 +10,10 @@ class Aspersor {
     method esRegable(){
            return false
     }
-
-    method comenzarARegar(){
+    method image(){
+       return image
+    }
+     method comenzarARegar(){
            game.onTick(1000, "Riego Automatico",{ self.regarPosicionesLindantes()})
     }
     method regarPosicionesLindantes() {
@@ -45,12 +47,12 @@ object aspersores{
 	 const aspersoresColocados = #{}
 	
      method colocarAspersor(posicion){
-	    	 const aspersorAColocar = new Aspersor(position = posicion)
-		 aspersoresColocados.add(aspersorAColocar)
-		 game.addVisual(aspersorAColocar)
-           aspersorAColocar.comenzarARegar()
-	}
-     method hayAspersorEn(posicion){
+        const aspersorAColocar = new Aspersor(position = posicion)
+        aspersoresColocados.add(aspersorAColocar)
+        game.addVisual(aspersorAColocar)
+        aspersorAColocar.comenzarARegar()
+        }
+       method hayAspersorEn(posicion){
 		 return aspersoresColocados.any({aspersor => aspersor.position() == posicion})
 	}
 	method aspersorEn(posicion){

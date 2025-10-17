@@ -14,11 +14,11 @@ object personaje {
          self.validarParcelaParaSiembra()
          cultivos.agregarCultivo(cultivo)
      }
-    method validarParcelaParaSiembra(){  
-         if (cultivos.hayCultivoEn(self.position())){
-             self.error("Parcela ocupada")     
+    method validarParcelaParaSiembra() {
+         if (cultivos.eSParcelaOcupada(position)) {
+             self.error("Parcela ocupada")
          }
-    }
+     }
     method sembrarMaiz(){
          const maiz = new Maiz (position= self.position())
          self.sembrar(maiz)
@@ -89,19 +89,16 @@ object personaje {
           self.error("Nada para vender")
          } 
      }
-     method hayCultivosCosechados() {
-    return  cultivos.hayCultivoEn(position)
-}
-
+    method hayCultivosCosechados() {
+         return !cultivosCosechados.isEmpty()
+    }
     method sumarMonedas(cantidad) {
         monedas +=  cantidad
     }
 //**  Aspersor **//
     method colocarAspersor() {
      self.validarParcelaParaAspersor()
-     const posicionAColocar = self.position()
-     const nuevoAspersor = new Aspersor(position = posicionAColocar)
-     aspersoresColocados.agregarAspersor(nuevoAspersor)
+      aspersores.colocarAspersor(self.position())
      }
     method validarParcelaParaAspersor() {
     if (aspersores.hayAspersorEn(self.position())) {

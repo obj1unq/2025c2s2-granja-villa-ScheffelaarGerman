@@ -23,6 +23,12 @@ object cultivos {
     method vaciarCultivosSembrados(){
          cultivosSembrados.clear()
      }
+    method eSParcelaOcupada(posicion) {
+    return ( self.hayCultivoEn(posicion) or
+             mercados.hayMercadoEn(posicion) or
+             aspersores.hayAspersorEn(posicion)
+            )
+     }
 }
 //** Maiz **//
 class Maiz {
@@ -175,10 +181,14 @@ class Tomaco {
          cultivos.agregarCultivo(self)
      }
     method regar() {
-        if (position.y() == game.height() - 1) {
-             position = game.at(position.x(), 0)
+         var posicionDespuesDelRiego 
+         if (position.y() == game.height() - 1) {
+             posicionDespuesDelRiego = game.at(position.x(), 0)
          } else {
-             position = game.at(position.x(), position.y() + 1)
+             posicionDespuesDelRiego = game.at(position.x(), position.y() + 1)
+        }
+        if (!cultivos.eSParcelaOcupada(posicionDespuesDelRiego)) {
+             position = posicionDespuesDelRiego
          }
      }
     method estaListoParaCosechar(){
