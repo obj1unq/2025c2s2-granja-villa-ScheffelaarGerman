@@ -1,0 +1,56 @@
+import wollok.game.*
+import personaje.*
+import cultivos.*
+import aspersores.*
+import mercados.*
+
+describe "Siembra" {
+    
+    method initialize() {
+        game.clear()
+        game.height(10)
+        game.width(10)
+        game.ground("ground.png")
+        mercados.colocarMercados()
+        game.addVisualCharacter(personaje)
+        personaje.position(game.at(5, 5))
+    }
+    test "Sembrar Maíz" {
+        personaje.sembrarMaiz()
+        const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+        assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+        assert.equals("corn_baby.png", cultivoSembrado.image())
+        assert.equals(game.at(5, 5), cultivoSembrado.position())
+    }
+    test "Sembrar Trigo" {
+        personaje.sembrarTrigo()
+        const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+        assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+        assert.equals("wheat_0.png", cultivoSembrado.image())
+        assert.equals(game.at(5, 5), cultivoSembrado.position())
+    }
+    test "Sembrar Tomaco" {
+        personaje.sembrarTomaco()
+        const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+        assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+        assert.equals("tomaco.png", cultivoSembrado.image())
+        assert.equals(game.at(5, 5), cultivoSembrado.position())
+    }
+    test "Parcela Ocupada por otro cultivo" {
+        personaje.sembrarMaiz()
+        assert.throwsExceptionWithMessage("Parcela ocupada", { personaje.sembrarTomaco() })
+      }
+     test "Parcela ocupada por un Mercado" {
+     personaje.position(game.at(0, 0))
+     assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz()})
+     }
+
+     test "Parcela ocupada por un Aspersor" {
+     aspersores.colocarAspersor(game.at(3, 3))
+     personaje.position(game.at(3, 3))
+     assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz() })
+}
+
+
+}
+ 

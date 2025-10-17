@@ -24,11 +24,14 @@ object cultivos {
          cultivosSembrados.clear()
      }
     method eSParcelaOcupada(posicion) {
-    return ( self.hayCultivoEn(posicion) or
+         return ( self.hayCultivoEn(posicion) or
              mercados.hayMercadoEn(posicion) or
              aspersores.hayAspersorEn(posicion)
-            )
+             )   
      }
+    method cultivosSembrados(){
+        return cultivosSembrados
+    }
 }
 //** Maiz **//
 class Maiz {

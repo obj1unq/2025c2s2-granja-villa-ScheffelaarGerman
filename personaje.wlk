@@ -16,7 +16,7 @@ object personaje {
      }
     method validarParcelaParaSiembra() {
          if (cultivos.eSParcelaOcupada(position)) {
-             self.error("Parcela ocupada")
+            self.error("Parcela ocupada")
          }
      }
     method sembrarMaiz(){
@@ -92,6 +92,8 @@ object personaje {
     method hayCultivosCosechados() {
          return !cultivosCosechados.isEmpty()
     }
+
+
     method sumarMonedas(cantidad) {
         monedas +=  cantidad
     }
@@ -111,9 +113,8 @@ object personaje {
 }
 //** Inventario  **//    
 method inventario() {
-         const plantasCosechadas = cultivosCosechados.size()
-         game.say(self,"Monedas de Oro:"+monedas+"\n" +
-                      "Plantas cosechadas:"+plantasCosechadas)
-    }
+     const plantasCosechadas = cultivosCosechados.size()
+     game.say(self, "Cultivos Cosechados:"+plantasCosechadas+"\nMonedas: "+ monedas)
+}
 }
 

@@ -42,6 +42,7 @@ class Market {
          monedas -= valor
          vendedor.sumarMonedas(valor)
     }
+    
 }
 object mercados{
 	 const mercadosInstalados = #{}
@@ -58,9 +59,9 @@ object mercados{
 		 return mercadosInstalados.find({mercado => mercado.position() == posicion})
 	}
 method colocarMercados() {
-     const mercado1 = new Market(position = game.at(0, 0), monedas = 1000)        
-     const mercado2 = new Market(position = game.at(9, 0), monedas = 1000)     
-     const mercado3 = new Market(position = game.at(0, 9), monedas = 1000)       
+     const mercado1 = new Market(position = game.at(0, 0), monedas = 10)        
+     const mercado2 = new Market(position = game.at(9, 0), monedas = 100)     
+     const mercado3 = new Market(position = game.at(0, 9), monedas = 500)       
      const mercado4 = new Market(position = game.at(9, 9), monedas = 1000)   
      game.addVisual(mercado1)
      game.addVisual(mercado2)
