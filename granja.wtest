@@ -7,50 +7,125 @@ import mercados.*
 describe "Siembra" {
     
     method initialize() {
-        game.clear()
-        game.height(10)
-        game.width(10)
-        game.ground("ground.png")
-        mercados.colocarMercados()
-        game.addVisualCharacter(personaje)
-        personaje.position(game.at(5, 5))
+         game.clear()
+         game.height(10)
+         game.width(10)
+         game.ground("ground.png")
+         mercados.colocarMercados()
+         game.addVisualCharacter(personaje)
+         personaje.position(game.at(5, 5))
     }
     test "Sembrar Maíz" {
-        personaje.sembrarMaiz()
-        const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
-        assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
-        assert.equals("corn_baby.png", cultivoSembrado.image())
-        assert.equals(game.at(5, 5), cultivoSembrado.position())
+         personaje.sembrarMaiz()
+         const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+         assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+         assert.equals("corn_baby.png", cultivoSembrado.image())
+         assert.equals(game.at(5, 5), cultivoSembrado.position())
     }
     test "Sembrar Trigo" {
-        personaje.sembrarTrigo()
-        const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
-        assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
-        assert.equals("wheat_0.png", cultivoSembrado.image())
-        assert.equals(game.at(5, 5), cultivoSembrado.position())
+         personaje.sembrarTrigo()
+         const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+         assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+         assert.equals("wheat_0.png", cultivoSembrado.image())
+         assert.equals(game.at(5, 5), cultivoSembrado.position())
     }
     test "Sembrar Tomaco" {
-        personaje.sembrarTomaco()
-        const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
-        assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
-        assert.equals("tomaco.png", cultivoSembrado.image())
-        assert.equals(game.at(5, 5), cultivoSembrado.position())
+         personaje.sembrarTomaco()
+         const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+         assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+         assert.equals("tomaco.png", cultivoSembrado.image())
+         assert.equals(game.at(5, 5), cultivoSembrado.position())
     }
     test "Parcela Ocupada por otro cultivo" {
-        personaje.sembrarMaiz()
-        assert.throwsExceptionWithMessage("Parcela ocupada", { personaje.sembrarTomaco() })
+         personaje.sembrarMaiz()
+         assert.throwsExceptionWithMessage("Parcela ocupada", { personaje.sembrarTomaco() })
       }
-     test "Parcela ocupada por un Mercado" {
-     personaje.position(game.at(0, 0))
-     assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz()})
+    test "Parcela ocupada por un Mercado" {
+         personaje.position(game.at(0, 0))
+         assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz()})
      }
 
      test "Parcela ocupada por un Aspersor" {
-     aspersores.colocarAspersor(game.at(3, 3))
-     personaje.position(game.at(3, 3))
-     assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz() })
+         aspersores.colocarAspersor(game.at(3, 3))
+         personaje.position(game.at(3, 3))
+         assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz() })
+     }
+}
+describe"Riego"{
+    test "Regar una parcela vacia" {
+         personaje.position(game.at(5, 5))
+         assert.throwsExceptionWithMessage("Nada para regar aca", {personaje.regar()})
+     }
+    test "Regar un mercado" {
+         personaje.position(game.at(0, 0))
+         assert.throwsExceptionWithMessage("Nada para regar aca", { personaje.regar() })
+     }
+     test "Regar un aspersor" {
+         personaje.position(game.at(3, 3))
+         assert.throwsExceptionWithMessage("Nada para regar aca", { personaje.regar() })     
+     }
+    test "Regar Maiz bebe pasa a Maiz adulto" {
+         personaje.sembrarMaiz()
+         const maiz = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         assert.equals("corn_adult.png", maiz.image())
+     }
+     test "Regar Maiz adulto no cambia su estado" {
+         personaje.sembrarMaiz()
+         const maiz = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         const imagenAntes = maiz.image()
+         personaje.regar()
+         const imagenDespues = maiz.image()
+         assert.equals(imagenAntes, imagenDespues)
+     }
+     test "Regar Trigo etapa 0 pasa a etapa 1" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         assert.equals("wheat_1.png", trigo.image())
+     }
+
+     test "Regar Trigo etapa 1 pasa a etapa 2" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         personaje.regar()
+         assert.equals("wheat_2.png", trigo.image())
+     }
+
+     test "Regar Trigo etapa 2 pasa a etapa 3" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         assert.equals("wheat_3.png", trigo.image())
+     }      
+     test "Regar Trigo etapa 3 vuelve a etapa 0" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         assert.equals("wheat_0.png", trigo.image())
+     }
+     test "Regar Tomaco" {
+         personaje.sembrarTomaco()
+         const tomaco = cultivos.cultivoEn(personaje.position())
+         const posicionInicial = tomaco.position()
+         personaje.regar()
+         assert.equals(game.at(posicionInicial.x(), posicionInicial.y() + 1), tomaco.position())
+     }
+    test "Regar Tomaco caso de borde" {
+         personaje.position(game.at(5, game.height() - 1))
+         personaje.sembrarTomaco()
+         const tomaco = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         assert.equals(game.at(5, 0), tomaco.position())
+     }
 }
 
 
-}
  
