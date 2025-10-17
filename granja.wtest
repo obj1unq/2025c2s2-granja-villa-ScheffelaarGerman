@@ -15,6 +15,7 @@ describe "Siembra" {
          game.addVisualCharacter(personaje)
          personaje.position(game.at(5, 5))
     }
+
     test "Sembrar Maíz" {
          personaje.sembrarMaiz()
          const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
@@ -52,6 +53,7 @@ describe "Siembra" {
      }
 }
 describe"Riego"{
+   
     test "Regar una parcela vacia" {
          personaje.position(game.at(5, 5))
          assert.throwsExceptionWithMessage("Nada para regar aca", {personaje.regar()})
@@ -127,6 +129,7 @@ describe"Riego"{
      }
 }
 describe "Cosecha" {
+   
     test "Cosechar una parcela vacia" {
          personaje.position(game.at(5, 5))
          assert.throwsExceptionWithMessage("Nada para cosechar aca", {personaje.cosechar() })
@@ -183,6 +186,82 @@ describe "Cosecha" {
         assert.notThat(game.getObjectsIn(personaje.position()).contains(tomaco))
         assert.that(personaje.cultivosCosechados().contains(tomaco))
     }
+}
+describe "Venta" {
+
+    method initialize() {
+        mercados.colocarMercados()
+        game.addVisualCharacter(personaje)
+        personaje.position(game.at(5, 5))
+    }
+    test "Vender en una parcela" {
+         assert.throwsExceptionWithMessage("No es lugar de venta", { personaje.vender() })
+     }
+    test "Vender en mercado sin cosecha" {
+         personaje.position(game.at(0, 0))   
+         assert.throwsExceptionWithMessage("Nada para vender", { personaje.vender() })
+    }
+    test "Vender en mercado sin monedas" {
+         personaje.sembrarMaiz()
+         personaje.regar()          
+         personaje.cosechar()       
+         personaje.position(game.at(0, 0)) 
+         assert.throwsExceptionWithMessage("No hay suficiente dinero para comprar la cosecha entera", {personaje.vender() })
+         }
+    test "Vender Maíz adulto suma 150 monedas y vacía la cosecha" {
+         personaje.sembrarMaiz()
+         personaje.regar()          
+         personaje.cosechar()      
+         personaje.position(game.at(9, 9))
+         personaje.vender()
+         assert.equals(150, personaje.monedas())
+         assert.equals(0, personaje.cultivosCosechados().size())
+         }
+    test "Vender Trigo etapa 2" {
+         personaje.sembrarTrigo()
+         personaje.regar()
+         personaje.regar()
+         personaje.cosechar()
+         personaje.position(game.at(9, 9)) 
+         personaje.vender()
+         assert.equals( 100, personaje.monedas())
+         assert.equals(0, personaje.cultivosCosechados().size())
+     }
+    test "Vender Trigo etapa 3" {
+        personaje.sembrarTrigo()
+        personaje.regar()
+        personaje.regar()
+        personaje.regar()
+        personaje.cosechar()
+        personaje.position(game.at(9, 9))
+        personaje.vender()
+        assert.equals(200, personaje.monedas())
+        assert.equals(0, personaje.cultivosCosechados().size())
+    }
+    test "Vender Tomaco" {
+        personaje.sembrarTomaco()
+        personaje.cosechar()
+        personaje.position(game.at(9, 9))
+        personaje.vender()
+        assert.equals(80, personaje.monedas())
+        assert.equals(0, personaje.cultivosCosechados().size())
+    }
+    test "Vender múltiples plantas" {
+        personaje.sembrarMaiz()
+        personaje.regar()
+        personaje.cosechar()
+        personaje.sembrarTrigo()
+        personaje.regar()
+        personaje.regar()
+        personaje.cosechar()
+        personaje.sembrarTomaco()
+        personaje.cosechar()
+         personaje.position(game.at(9, 9))
+        personaje.vender()
+        assert.equals(150 + 100 + 80, personaje.monedas())
+        assert.equals(0, personaje.cultivosCosechados().size())
+    }
 
     
+
 }

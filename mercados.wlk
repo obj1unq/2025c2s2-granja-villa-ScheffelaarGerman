@@ -52,12 +52,20 @@ object mercados{
 		 game.addVisual(nuevoMercado)
 		 mercadosInstalados.add(nuevoMercado)
 	 }
-	method hayMercadoEn(posicion){
-		 return mercadosInstalados.any({mercado => mercado.position() == posicion})
-	}
-	method mercadoEn(posicion){
-		 return mercadosInstalados.find({mercado => mercado.position() == posicion})
-	}
+method hayMercadoEn(posicion) {
+    return mercadosInstalados.any({ mercado =>
+        mercado.position() == posicion
+    })
+}
+
+
+method mercadoEn(posicion) {
+    return mercadosInstalados.find({ mercado =>
+        mercado.position() == posicion
+    })
+}
+
+
 method colocarMercados() {
      const mercado1 = new Market(position = game.at(0, 0), monedas = 10)        
      const mercado2 = new Market(position = game.at(9, 0), monedas = 100)     

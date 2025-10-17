@@ -79,14 +79,16 @@ object personaje {
          const cosechaAVender = cultivosCosechados
          mercadoActual.comprar(cosechaAVender, self)
     }
-    method validarLugarDeVenta(){
-         if (!self.estoyEnLugarDeVenta()){ 
-             self.error("No es lugar de venta")
-             }
+ method validarLugarDeVenta() {
+    const posicionActual = self.position()
+    if (mercados.hayMercadoEn(posicionActual)) {
+        if (!self.hayCultivosCosechados()) {
+            self.error("Nada para vender")
+        }
+    } else {
+        self.error("No es lugar de venta")
     }
-    method estoyEnLugarDeVenta() {
-        return mercados.hayMercadoEn(self.position())
-    }
+}
    method validarCosechaParaVenta() {
       if (!self.hayCultivosCosechados()) {
           self.error("Nada para vender")
@@ -95,10 +97,11 @@ object personaje {
     method hayCultivosCosechados() {
          return !cultivosCosechados.isEmpty()
     }
-
-
     method sumarMonedas(cantidad) {
         monedas +=  cantidad
+    }
+    method monedas(){
+        return monedas
     }
 //**  Aspersor **//
     method colocarAspersor() {
