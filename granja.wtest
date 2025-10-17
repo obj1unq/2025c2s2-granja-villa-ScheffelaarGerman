@@ -126,6 +126,63 @@ describe"Riego"{
          assert.equals(game.at(5, 0), tomaco.position())
      }
 }
+describe "Cosecha" {
+    test "Cosechar una parcela vacia" {
+         personaje.position(game.at(5, 5))
+         assert.throwsExceptionWithMessage("Nada para cosechar aca", {personaje.cosechar() })
+    }
+     test "Cosechar Maiz bebe" {
+        personaje.sembrarMaiz()
+        assert.throwsExceptionWithMessage("No se puede cosechar aún", { personaje.cosechar() })
+    }
+    test "Cosechar Maiz adulto" {
+         personaje.sembrarMaiz()
+         personaje.regar()
+         const maiz = cultivos.cultivoEn(personaje.position())
+         personaje.cosechar()
+         assert.notThat(cultivos.cultivosSembrados().contains(maiz))
+         assert.notThat(game.getObjectsIn(personaje.position()).contains(maiz))
+         assert.that(personaje.cultivosCosechados().contains(maiz))
+     }
+    test "Cosechar Trigo etapa 0" {
+         personaje.sembrarTrigo()
+         assert.throwsExceptionWithMessage("No se puede cosechar aún", { personaje.cosechar() })
+    }
+     test "Cosechar Trigo etapa 1" {
+         personaje.sembrarTrigo()
+         personaje.regar()
+         assert.throwsExceptionWithMessage("No se puede cosechar aún", { personaje.cosechar() })
+     }
+    test "Cosechar Trigo etapa 2" {
+         personaje.sembrarTrigo()
+         personaje.regar() 
+         personaje.regar()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.cosechar()
+         assert.notThat(cultivos.cultivosSembrados().contains(trigo))
+         assert.notThat(game.getObjectsIn(personaje.position()).contains(trigo))
+         assert.that(personaje.cultivosCosechados().contains(trigo))
+     }
+    test "Cosechar Trigo etapa 3" {
+         personaje.sembrarTrigo()
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.cosechar()
+         assert.notThat(cultivos.cultivosSembrados().contains(trigo))
+         assert.notThat(game.getObjectsIn(personaje.position()).contains(trigo))
+         assert.that(personaje.cultivosCosechados().contains(trigo))
+     }
 
+    test "Cosechar Tomaco" {
+        personaje.sembrarTomaco()
+        const tomaco = cultivos.cultivoEn(personaje.position())
+        personaje.cosechar()
+        assert.notThat(cultivos.cultivosSembrados().contains(tomaco))
+        assert.notThat(game.getObjectsIn(personaje.position()).contains(tomaco))
+        assert.that(personaje.cultivosCosechados().contains(tomaco))
+    }
 
- 
+    
+}

@@ -62,11 +62,14 @@ object personaje {
     method validarEstadoDeCultivoParaCosecha(){    
       const cultivoACosechar = cultivos.cultivoEn(self.position())
       if (!cultivoACosechar.estaListoParaCosechar()) {
-         self.error("No se puede cosechar aún.")
+         self.error("No se puede cosechar aún")
          }
      }
     method vaciarCosecha(){
      cultivosCosechados.clear()
+    }
+    method cultivosCosechados(){
+        return cultivosCosechados
     }
 //**  Venta  **//
     method vender() {
