@@ -1,6 +1,10 @@
 import wollok.game.*
-import personaje.*
 import cultivos.*
+import personaje.*
+import aspersores.*
+import mercados.*
+
+
 
 program farmville {
 	//  CONFIG	
@@ -10,9 +14,20 @@ program farmville {
 	game.ground("ground.png")
 
 	//  VISUALES
- 	game.addVisualCharacter(personaje)
- 	game.addVisual(new Maiz()) // Se agrega a modo de prueba
+	mercados.colocarMercados()
+	game.addVisualCharacter(personaje)
+	
  	
- 	//  COMIENZA
+	//COMANDOS
+	keyboard.m().onPressDo({personaje.sembrarMaiz()})
+	keyboard.t().onPressDo({personaje.sembrarTrigo()})
+	keyboard.o().onPressDo({personaje.sembrarTomaco()})
+	keyboard.r().onPressDo({personaje.regar()})
+	keyboard.c().onPressDo({personaje.cosechar()})
+	keyboard.v().onPressDo({personaje.vender()})
+	keyboard.space().onPressDo({personaje.inventario()})
+	keyboard.a().onPressDo({personaje.colocarAspersor()})
+ 	
+	//  COMIENZA
 	game.start()
 }

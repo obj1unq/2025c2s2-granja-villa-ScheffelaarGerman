@@ -1,0 +1,371 @@
+import wollok.game.*
+import personaje.*
+import cultivos.*
+import aspersores.*
+import mercados.*
+
+describe "Siembra" {
+    
+    method initialize() {
+         game.clear()
+         game.height(10)
+         game.width(10)
+         game.ground("ground.png")
+         mercados.colocarMercados()
+         game.addVisualCharacter(personaje)
+         personaje.position(game.at(5, 5))
+    }
+
+    test "Sembrar Maíz" {
+         personaje.sembrarMaiz()
+         const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+         assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+         assert.equals("corn_baby.png", cultivoSembrado.image())
+         assert.equals(game.at(5,5), cultivoSembrado.position())
+    }
+    test "Sembrar Trigo" {
+         personaje.sembrarTrigo()
+         const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+         assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+         assert.equals("wheat_0.png", cultivoSembrado.image())
+         assert.equals(game.at(5, 5), cultivoSembrado.position())
+    }
+    test "Sembrar Tomaco" {
+         personaje.sembrarTomaco()
+         const cultivoSembrado = cultivos.cultivoEn(game.at(5, 5))
+         assert.equals(#{cultivoSembrado}, cultivos.cultivosSembrados())
+         assert.equals("tomaco.png", cultivoSembrado.image())
+         assert.equals(game.at(5, 5), cultivoSembrado.position())
+    }
+    test "Parcela Ocupada por otro cultivo" {
+         personaje.sembrarMaiz()
+         assert.throwsExceptionWithMessage("Parcela ocupada", { personaje.sembrarTomaco() })
+      }
+    test "Parcela ocupada por un Mercado" {
+         personaje.position(game.at(0, 0))
+         assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz()})
+     }
+
+     test "Parcela ocupada por un Aspersor" {
+         aspersores.colocarAspersor(game.at(3, 3))
+         personaje.position(game.at(3, 3))
+         assert.throwsExceptionWithMessage("Parcela ocupada", {personaje.sembrarMaiz() })
+     }
+}
+describe"Riego"{
+   
+    method initialize() {
+         game.clear()
+         game.height(10)
+         game.width(10)
+         game.ground("ground.png")
+         mercados.colocarMercados()
+         game.addVisualCharacter(personaje)
+         personaje.position(game.at(5, 5))
+    }
+   
+    test "Regar una parcela vacia" {
+         personaje.position(game.at(5, 5))
+         assert.throwsExceptionWithMessage("Nada para regar aca", {personaje.regar()})
+     }
+    test "Regar un mercado" {
+         personaje.position(game.at(0, 0))
+         assert.throwsExceptionWithMessage("Nada para regar aca", { personaje.regar() })
+     }
+     test "Regar un aspersor" {
+         personaje.position(game.at(3, 3))
+         assert.throwsExceptionWithMessage("Nada para regar aca", { personaje.regar() })     
+     }
+    test "Regar Maiz bebe y pasa a Maiz adulto" {
+         personaje.sembrarMaiz()
+         const maiz = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         assert.equals("corn_adult.png", maiz.image())
+     }
+     test "Regar Maiz adulto y no cambia su estado" {
+         personaje.sembrarMaiz()
+         const maiz = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         const imagenAntes = maiz.image()
+         personaje.regar()
+         const imagenDespues = maiz.image()
+         assert.equals(imagenAntes, imagenDespues)
+     }
+     test "Regar Trigo etapa 0 pasa a etapa 1" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         assert.equals("wheat_1.png", trigo.image())
+     }
+
+     test "Regar Trigo etapa 1 pasa a etapa 2" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         personaje.regar()
+         assert.equals("wheat_2.png", trigo.image())
+     }
+
+     test "Regar Trigo etapa 2 pasa a etapa 3" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         assert.equals("wheat_3.png", trigo.image())
+     }      
+     test "Regar Trigo etapa 3 vuelve a etapa 0" {
+         personaje.sembrarTrigo()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         assert.equals("wheat_0.png", trigo.image())
+     }
+     test "Regar Tomaco" {
+         personaje.sembrarTomaco()
+         const tomaco = cultivos.cultivoEn(personaje.position())
+         const posicionInicial = tomaco.position()
+         personaje.regar()
+         assert.equals(game.at(posicionInicial.x(), posicionInicial.y() + 1), tomaco.position())
+     }
+    test "Regar Tomaco caso de borde" {
+         personaje.position(game.at(5, game.height() - 1))
+         personaje.sembrarTomaco()
+         const tomaco = cultivos.cultivoEn(personaje.position())
+         personaje.regar()
+         assert.equals(game.at(5, 0), tomaco.position())
+     }
+}
+describe "Cosecha" {
+
+     method initialize() {
+         game.clear()
+         game.height(10)
+         game.width(10)
+         game.ground("ground.png")
+         mercados.colocarMercados()
+         game.addVisualCharacter(personaje)
+         personaje.position(game.at(5, 5))
+    }
+   
+    test "Cosechar una parcela vacia" {
+         personaje.position(game.at(5, 5))
+         assert.throwsExceptionWithMessage("Nada para cosechar aca", {personaje.cosechar() })
+    }
+     test "Cosechar Maiz bebe" {
+        personaje.sembrarMaiz()
+        assert.throwsExceptionWithMessage("No se puede cosechar aún", { personaje.cosechar() })
+    }
+    test "Cosechar Maiz adulto" {
+         personaje.sembrarMaiz()
+         personaje.regar()
+         const maiz = cultivos.cultivoEn(personaje.position())
+         personaje.cosechar()
+         assert.notThat(cultivos.cultivosSembrados().contains(maiz))
+         assert.notThat(game.getObjectsIn(personaje.position()).contains(maiz))
+         assert.that(personaje.cultivosCosechados().contains(maiz))
+     }
+    test "Cosechar Trigo etapa 0" {
+         personaje.sembrarTrigo()
+         assert.throwsExceptionWithMessage("No se puede cosechar aún", { personaje.cosechar() })
+    }
+     test "Cosechar Trigo etapa 1" {
+         personaje.sembrarTrigo()
+         personaje.regar()
+         assert.throwsExceptionWithMessage("No se puede cosechar aún", { personaje.cosechar() })
+     }
+    test "Cosechar Trigo etapa 2" {
+         personaje.sembrarTrigo()
+         personaje.regar() 
+         personaje.regar()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.cosechar()
+         assert.notThat(cultivos.cultivosSembrados().contains(trigo))
+         assert.notThat(game.getObjectsIn(personaje.position()).contains(trigo))
+         assert.that(personaje.cultivosCosechados().contains(trigo))
+     }
+    test "Cosechar Trigo etapa 3" {
+         personaje.sembrarTrigo()
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         const trigo = cultivos.cultivoEn(personaje.position())
+         personaje.cosechar()
+         assert.notThat(cultivos.cultivosSembrados().contains(trigo))
+         assert.notThat(game.getObjectsIn(personaje.position()).contains(trigo))
+         assert.that(personaje.cultivosCosechados().contains(trigo))
+     }
+
+    test "Cosechar Tomaco" {
+        personaje.sembrarTomaco()
+        const tomaco = cultivos.cultivoEn(personaje.position())
+        personaje.cosechar()
+        assert.notThat(cultivos.cultivosSembrados().contains(tomaco))
+        assert.notThat(game.getObjectsIn(personaje.position()).contains(tomaco))
+        assert.that(personaje.cultivosCosechados().contains(tomaco))
+    }
+}
+describe "Venta" {
+
+    method initialize() {
+         game.clear()
+         game.height(10)
+         game.width(10)
+         game.ground("ground.png")
+         mercados.colocarMercados()
+         game.addVisualCharacter(personaje)
+         personaje.position(game.at(5, 5))
+    }
+
+   
+    test "Vender en una parcela" {
+         assert.throwsExceptionWithMessage("No es lugar de venta", { personaje.vender() })
+     }
+    test "Vender en mercado sin cosecha" {
+         personaje.position(game.at(0, 0))   
+         assert.throwsExceptionWithMessage("Nada para vender", { personaje.vender() })
+    }
+    test "Vender en mercado sin monedas" {
+         personaje.sembrarMaiz()
+         personaje.regar()          
+         personaje.cosechar()       
+         personaje.position(game.at(0, 0)) 
+         assert.throwsExceptionWithMessage("No hay suficiente dinero para comprar la cosecha entera", {personaje.vender() })
+         }
+    test "Vender Maíz adulto suma 150 monedas y vacía la cosecha" {
+         personaje.sembrarMaiz()
+         personaje.regar()          
+         personaje.cosechar()      
+         personaje.position(game.at(9, 9))
+         personaje.vender()
+         assert.equals(150, personaje.monedas())
+         assert.equals(0, personaje.cultivosCosechados().size())
+         }
+    test "Vender Trigo etapa 2" {
+         personaje.sembrarTrigo()
+         personaje.regar()
+         personaje.regar()
+         personaje.cosechar()
+         personaje.position(game.at(9, 9)) 
+         personaje.vender()
+         assert.equals( 100, personaje.monedas())
+         assert.equals(0, personaje.cultivosCosechados().size())
+     }
+    test "Vender Trigo etapa 3" {
+         personaje.sembrarTrigo()
+         personaje.regar()
+         personaje.regar()
+         personaje.regar()
+         personaje.cosechar()
+         personaje.position(game.at(9, 9))
+         personaje.vender()
+         assert.equals(200, personaje.monedas())
+         assert.equals(0, personaje.cultivosCosechados().size())
+    }
+    test "Vender Tomaco" {
+         personaje.sembrarTomaco()
+         personaje.cosechar()
+         personaje.position(game.at(9, 9))
+         personaje.vender()
+         assert.equals(80, personaje.monedas())
+         assert.equals(0, personaje.cultivosCosechados().size())
+    }
+    test "Vender múltiples plantas" {
+         personaje.sembrarMaiz()
+         personaje.regar()
+         personaje.cosechar()
+         personaje.sembrarTrigo()
+         personaje.regar()
+         personaje.regar()
+         personaje.cosechar()
+         personaje.sembrarTomaco()
+         personaje.cosechar()
+          personaje.position(game.at(9, 9))
+         personaje.vender()
+         assert.equals(150 + 100 + 80, personaje.monedas())
+         assert.equals(0, personaje.cultivosCosechados().size())
+    }
+}
+describe "Aspersores" {
+
+    method initialize() {
+         game.clear()
+         game.height(10)
+         game.width(10)
+         game.ground("ground.png")
+         mercados.colocarMercados()
+         game.addVisualCharacter(personaje)
+         personaje.position(game.at(5, 5))
+    }
+
+    test "Colocar aspersor" {
+         personaje.colocarAspersor()
+         const aspersorColocado = aspersores.aspersorEn(personaje.position())
+         assert.equals(#{aspersorColocado}, aspersores.aspersoresColocados())
+         assert.equals("aspersor.png", aspersorColocado.image())
+         assert.equals(game.at(5,5), aspersorColocado.position())
+     }
+    test "Riega arriba" {
+         const maiz = new Maiz(position = game.at(5,6))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+     }
+    test "Riega abajo" {
+         const maiz = new Maiz(position = game.at(5,4))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+    }
+    test "Riega derecha" {
+         const maiz = new Maiz(position = game.at(6,5))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+    }
+
+    test "Riega izquierda" {
+         const maiz = new Maiz(position = game.at(4,5))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+    }
+    test "Riega diagonal arriba-derecha" {
+         const maiz = new Maiz(position = game.at(6,6))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+    }
+    test "Riega diagonal arriba-izquierda" {
+         const maiz = new Maiz(position = game.at(4,6))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+    }
+    test "Riega diagonal abajo-derecha" {
+         const maiz = new Maiz(position = game.at(6,4))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+    }
+    test "Riega diagonal abajo-izquierda" {
+         const maiz = new Maiz(position = game.at(4,4))
+         cultivos.agregarCultivo(maiz)
+         personaje.colocarAspersor()
+         aspersores.aspersorEn(game.at(5,5)).regarPosicionesLindantes()
+         assert.equals(maizAdulto, maiz.etapa())
+    }
+         test "No se puede colocar dos aspersores en el mismo lugar" {
+         personaje.position(game.at(5,5))
+         personaje.colocarAspersor()assert.throwsExceptionWithMessage("Ya hay un aspersor aquí", {personaje.colocarAspersor()})
+    }
+}
